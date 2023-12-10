@@ -1,0 +1,10 @@
+plugins {
+    id 'multimodule-config'
+}
+
+dependencies {
+    implementation project(":libfp-core")
+
+    testImplementation project(":libfp-cha")
+    testImplementation project(":libfp-impl")
+}

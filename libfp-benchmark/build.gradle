@@ -1,0 +1,11 @@
+plugins {
+    id 'multimodule-config'
+}
+
+dependencies {
+    implementation "me.tongfei:progressbar:0.9.5"
+    implementation project(":libfp-core")
+
+    testImplementation project(":libfp-cha")
+    testImplementation project(":libfp-impl")
+}

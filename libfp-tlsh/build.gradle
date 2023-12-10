@@ -1,0 +1,9 @@
+plugins {
+    id 'multimodule-config'
+}
+
+dependencies {
+    implementation project(":libfp-core")
+    implementation project(":libfp-cha")
+    implementation fileTree(include: '*.jar', dir: "${rootDir}/libs")
+}
