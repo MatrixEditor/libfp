@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile name="bloom" file-extension="b.fp" target="bloom">
+    <impl class="io.github.libfp.cha.CHAProfile"/>
+
+    <il-factory class="io.github.libfp.impl.UniqueFuzzyILFactory"/>
+    <normalizer class="io.github.libfp.impl.CrossPlatformBytecodeNormalizer"/>
+    <integration class="io.github.libfp.impl.bloom.Bloom:getInstance"/>
+
+    <extension class="io.github.libfp.cha.extension.ClassProfileList" enabled="true">
+        <arg class="io.github.libfp.cha.IClassProfileFactory"
+             impl="io.github.libfp.cha.ExtendedClassProfile$Factory"/>
+    </extension>
+
+    <strategy>
+        <!-- 1. step: compare class profiles (leads to comparing method profiles) -->
+        <similarity target="io.github.libfp.cha.CHAProfile"
+                    class="io.github.libfp.impl.Strategies:profileMaximumWeightBipartiteMatching"/>
+
+    </strategy>
+
+    <threshold class="io.github.libfp.cha.CHAProfile" value="0.75"/>
+    <threshold class="io.github.libfp.cha.ExtendedClassProfile" value="0.6"/>
+    <threshold class="io.github.libfp.benchmark.TestResult" value="0.7"/>
+
+</profile>

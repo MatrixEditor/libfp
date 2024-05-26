@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile name="bloom-and-ast-vector" file-extension="b+ast.fp" target="bloom_ast">
+    <impl class="io.github.libfp.cha.CHAProfile"/>
+    <il-factory class="io.github.libfp.impl.BasicFuzzyILFactory"/>
+    <normalizer class="io.github.libfp.impl.CallSideNormalizer"/> <!-- Not used -->
+    <integration class="io.github.libfp.models.BloomAndASTVector"/>
+
+    <!-- Extensions:
+
+    1. ClassProfileList: This extension is used to add support for class-level
+                         profiling.
+
+    2. MethodProfileList: This extension is used to add support for method-level
+                          profiling.
+    -->
+    <extension class="io.github.libfp.cha.extension.ClassProfileList" enabled="true">
+        <arg class="io.github.libfp.cha.IClassProfileFactory"
+             impl="io.github.libfp.cha.ExtendedClassProfile$Factory"/>
+    </extension>
+
+    <extension class="io.github.libfp.cha.extension.MethodProfileList" enabled="true">
+        <arg class="io.github.libfp.profile.IManagedProfileFactory"
+             impl="io.github.libfp.cha.MethodProfile$Factory"/>
+    </extension>
+
+    <!-- Strategy: There is no need to add a strategy here, because it is already
+    defined in the integration implementation. -->
+
+    <!-- threshold: -->
+    <threshold class="io.github.libfp.cha.ExtendedClassProfile" value="0.65"/>
+    <threshold class="io.github.libfp.cha.MethodProfile" value="0.70"/>
+    <threshold class="io.github.libfp.benchmark.TestResult" value="1.0"/>
+
+</profile>

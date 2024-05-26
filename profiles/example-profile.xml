@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profile name="combined" file-extension="c.fp" target="combined">
+    <!-- Main profile class:
+    We will apply the default CHA (Class-Hierarchy-Analysis) profile class as it
+    already contains all necessary elements.
+    -->
+    <impl class="io.github.libfp.cha.CHAProfile"/>
+
+    <!-- IL-Factory:
+    TODO: create analysis results on IL factory implementations.
+
+    The 'BasicFuzzyILFactory' provides a simple yet universal approach
+    on converting descriptors (method and class) into IL instructions.
+    -->
+    <il-factory class="io.github.libfp.impl.BasicFuzzyILFactory"/>
+
+    <!-- Normalizer:
+    The bytecode normalizer used here is applicable to both Java and Dalvik
+    platforms.
+    -->
+    <normalizer class="io.github.libfp.impl.CrossPlatformBytecodeNormalizer"/>
+
+    <!-- Integration:
+    A custom integration class is used here to integrate different models.
+    -->
+    <integration class="io.github.libfp.impl.combined.CombinedProfileIntegration"/>
+
+    <!-- Extensions:
+
+    1. ClassProfileList: This extension is used to add support for class-level
+                         profiling.
+
+    2. MethodProfileList: This extension is used to add support for method-level
+                          profiling.
+
+    3. PackageProfileList: This extension is used to add support for package-level
+                           profiling.
+    -->
+    <extension class="io.github.libfp.cha.extension.ClassProfileList" enabled="true">
+        <arg class="io.github.libfp.cha.IClassProfileFactory"
+             impl="io.github.libfp.cha.ExtendedClassProfile$Factory"/>
+    </extension>
+
+    <extension class="io.github.libfp.cha.extension.MethodProfileList" enabled="true">
+        <arg class="io.github.libfp.profile.IManagedProfileFactory"
+             impl="io.github.libfp.cha.MethodProfile$Factory"/>
+    </extension>
+
+    <extension class="io.github.libfp.cha.extension.PackageProfileList" enabled="true" retention="RUNTIME">
+        <arg class="io.github.libfp.profile.IManagedProfileFactory"
+             impl="io.github.libfp.impl.combined.CombinedPackageFactory"/>
+    </extension>
+
+
+    <!-- Strategy: There is no need to add a strategy here, because it is already
+    defined in the integration implementation. -->
+
+    <!-- threshold: -->
+    <threshold class="io.github.libfp.cha.CHAProfile" value="0.75"/>
+
+</profile>

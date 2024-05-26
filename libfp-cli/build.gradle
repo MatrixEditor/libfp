@@ -1,0 +1,37 @@
+plugins {
+    id 'multimodule-config'
+}
+
+dependencies {
+    implementation project(":libfp-core")
+    implementation project(":libfp-impl")
+    implementation project(":libfp-cha")
+    implementation project(":libfp-benchmark")
+    implementation project(":libfp-approaches")
+
+    implementation 'com.beust:jcommander:1.82'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes('Main-Class': 'io.github.libfp.CLI')
+    }
+}
+
+task Standalone(type: Jar) {
+    manifest.from jar.manifest
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } {
+        // preventing signed jars into the final JAR
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    with jar
+}

@@ -1,0 +1,8 @@
+plugins {
+    id 'multimodule-config'
+}
+
+
+dependencies {
+    implementation project(":libfp-core")
+}

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# IMPORTANT: Download dx.jar from maven and place it under $root$/libs
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+source ${SCRIPT_DIR}/config.sh
+
+# 1. change location
+cd $PROJECT_DIR
+
+LIBS_BASE_DIR="$1"
+LIBS_OUT_DIR="$2"
+if [ ! -d "$LIBS_BASE_DIR" ]; then
+  echo "Directory $LIBS_BASE_DIR does not exist"
+  exit 1
+fi
+
+TMP_DIR=$(mktemp -d)
+echo "Temporary directory: $TMP_DIR"
+
+# 2. convert to dex
+function make_dex() {
+  echo "Converting $2 to $1"
+  java -cp libs/dx.jar com.android.dx.command.Main --dex \
+    --no-optimize --no-strict \
+    --min-sdk-version=26 \
+    --output="$1" "$2"
+}
+
+
+for f in $(ls $LIBS_BASE_DIR); do
+  if [[ $f == *.jar ]]; then
+    if [ -f "$LIBS_OUT_DIR/${f%.jar}.dex" ]; then
+      continue
+    fi
+    make_dex "$LIBS_OUT_DIR/${f%.jar}.dex" "$LIBS_BASE_DIR/$f"
+  elif [[ $f == *.aar ]]; then
+    name="$LIBS_OUT_DIR/${f%.aar}.dex"
+    if [ -f "$name" ]; then
+      continue
+    fi
+    # first extract classes.jar to temp dir
+    7z e -o$TMP_DIR "$LIBS_BASE_DIR/$f" classes.jar > /dev/null
+    cd $PROJECT_DIR
+    make_dex "$name" "$TMP_DIR/classes.jar"
+    rm -f "$TMP_DIR/classes.jar"
+  else
+    echo "File $f is not a jar or aar"
+  fi
+done
+
+rm -rf $TMP_DIR
+
+

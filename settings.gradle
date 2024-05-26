@@ -1,0 +1,9 @@
+rootProject.name = 'libfp'
+include 'libfp-core'
+include 'libfp-cha'
+include 'libfp-tlsh'
+include 'libfp-impl'
+include 'libfp-benchmark'
+include 'libfp-approaches'
+include 'libfp-cli'
+

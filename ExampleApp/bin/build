@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP_PROJECT_DIR="$SCRIPT_DIR/.."
+PROJECT_DIR="$SCRIPT_DIR/../.."
+DATASET_DIR="$PROJECT_DIR/Demo"
+
+APP_ID="000"
+APP_DOMAIN="com.example.exampleapp"
+
+cd "$APP_PROJECT_DIR"
+echo "[Build] Building $APP_ID (normal release)"
+gradle assemble
+
+if [ ! -f "$APP_PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" ]; then
+    echo "Failed to build app"
+    exit 1
+fi
+
+if [ ! -d "$DATASET_DIR/apps/$APP_DOMAIN" ]; then
+    mkdir -p "$DATASET_DIR/apps/$APP_DOMAIN"
+fi
+
+cp "$APP_PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" \
+  "$DATASET_DIR/apps/$APP_DOMAIN/$APP_ID-$APP_DOMAIN.apk"
+
+sed -i "s/minifyEnabled false/minifyEnabled true/g" "$APP_PROJECT_DIR/app/build.gradle"
+
+echo "[Build] Building $APP_ID (proguard release)"
+gradle assemble
+
+if [ ! -f "$APP_PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" ]; then
+    echo "Failed to build proguard-app"
+    exit 1
+fi
+
+cp "$APP_PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk" \
+  "$DATASET_DIR/apps/$APP_DOMAIN/proguard-$APP_ID-$APP_DOMAIN.apk"
+
+sed -i "s/minifyEnabled true/minifyEnabled false/g" "$APP_PROJECT_DIR/app/build.gradle"

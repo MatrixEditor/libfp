@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+source ${SCRIPT_DIR}/config.sh
+
+cd "${PROJECT_DIR}"
+
+java $DEFAULT_JVM_OPTS -cp ${EXTRA_CLASSPATH} libfp-cli/build/libs/libfp-cli.jar io.github.libfp.cli.cmd.Benchmark $@

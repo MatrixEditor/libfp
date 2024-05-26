@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation 'com.ibm.wala:com.ibm.wala.core:1.6.0'
+    implementation 'com.ibm.wala:com.ibm.wala.dalvik:1.6.0'
+    implementation 'org.smali:dexlib2:2.5.2'
+    implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'org.jgrapht:jgrapht-core:1.5.2'
+}
+
+test {
+    useJUnitPlatform()
+}

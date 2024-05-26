@@ -1,0 +1,12 @@
+plugins {
+    id 'multimodule-config'
+}
+
+dependencies {
+    implementation project(":libfp-core")
+//    implementation fileTree(include: '*.jar', dir: "${rootDir}/libfp-approaches/Libs")
+    implementation project(":libfp-benchmark")
+
+    implementation project(":libfp-cha")
+    implementation project(":libfp-impl")
+}
